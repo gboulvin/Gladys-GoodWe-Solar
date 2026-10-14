@@ -1,0 +1,748 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "GoodWe",
+  "description": {
+    "en": "GoodWe solar inverters and batteries: production, grid, house and battery, local or SEMS cloud.",
+    "fr": "Onduleurs solaires et batteries GoodWe : production, réseau, maison et batterie, en local ou cloud.",
+    "de": "GoodWe-Solarwechselrichter und Batterien: Erzeugung, Netz, Haus, Batterie, lokal oder SEMS-Cloud.",
+    "es": "Inversores solares y baterías GoodWe: producción, red, casa y batería, en local o nube SEMS."
+  },
+  "version": "0.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-goodwe-solar:0.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-GoodWe-Solar/main/cover.png",
+  "categories": ["energy"],
+  "transports": ["local", "cloud"],
+  "network_discovery": [{ "type": "udp-active-broadcast", "ports": [48899] }],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Local connection (recommended)",
+        "fr": "Connexion locale (recommandée)",
+        "de": "Lokale Verbindung (empfohlen)",
+        "es": "Conexión local (recomendada)"
+      },
+      "description": {
+        "en": "The inverter is read on your network (UDP port 8899 of its WiFi/LAN module): every minute, detailed values, settings available in scenes. Leave the network scan on to find it, or enter its IP address (give it a fixed address in your router).",
+        "fr": "L'onduleur est lu sur votre réseau (port UDP 8899 de son module WiFi/LAN) : chaque minute, valeurs détaillées, réglages disponibles dans les scènes. Laissez la recherche réseau active pour le trouver, ou saisissez son adresse IP (fixez-la dans votre box).",
+        "de": "Der Wechselrichter wird in Ihrem Netzwerk gelesen (UDP-Port 8899 seines WLAN/LAN-Moduls): jede Minute, detaillierte Werte, Einstellungen in Szenen. Lassen Sie die Netzwerksuche aktiv oder geben Sie seine IP-Adresse ein (im Router fest vergeben).",
+        "es": "El inversor se lee en su red (puerto UDP 8899 de su módulo WiFi/LAN): cada minuto, valores detallados, ajustes disponibles en escenas. Deje activa la búsqueda en red o introduzca su dirección IP (fíjela en su router)."
+      }
+    },
+    {
+      "key": "inverter_hosts",
+      "type": "string",
+      "label": {
+        "en": "Inverter IP addresses",
+        "fr": "Adresses IP des onduleurs",
+        "de": "IP-Adressen der Wechselrichter",
+        "es": "Direcciones IP de los inversores"
+      },
+      "description": {
+        "en": "Optional, separated by commas. Needed when the network scan does not find the inverter.",
+        "fr": "Facultatif, séparées par des virgules. Utile si la recherche réseau ne trouve pas l'onduleur.",
+        "de": "Optional, durch Kommas getrennt. Nötig, wenn die Netzwerksuche den Wechselrichter nicht findet.",
+        "es": "Opcional, separadas por comas. Necesario si la búsqueda en red no encuentra el inversor."
+      },
+      "placeholder": {
+        "en": "e.g. 192.168.1.50",
+        "fr": "ex. 192.168.1.50",
+        "de": "z. B. 192.168.1.50",
+        "es": "p. ej. 192.168.1.50"
+      },
+      "required": false
+    },
+    {
+      "key": "network_scan",
+      "type": "boolean",
+      "label": {
+        "en": "Search the network for GoodWe inverters",
+        "fr": "Rechercher les onduleurs GoodWe sur le réseau",
+        "de": "Netzwerk nach GoodWe-Wechselrichtern durchsuchen",
+        "es": "Buscar inversores GoodWe en la red"
+      },
+      "required": false,
+      "default": true
+    },
+    {
+      "key": "cloud",
+      "type": "section",
+      "label": {
+        "en": "SEMS cloud (optional)",
+        "fr": "Cloud SEMS (facultatif)",
+        "de": "SEMS-Cloud (optional)",
+        "es": "Nube SEMS (opcional)"
+      },
+      "description": {
+        "en": "The account of the SEMS Portal / SEMS+ app. Used when the inverter is not reachable on the network, or as a fallback. Read-only, refreshed every 5 minutes. A visitor account created in the SEMS app is enough.",
+        "fr": "Le compte du portail SEMS / de l'application SEMS+. Utilisé quand l'onduleur n'est pas joignable sur le réseau, ou en secours. Lecture seule, actualisé toutes les 5 minutes. Un compte visiteur créé dans l'application SEMS suffit.",
+        "de": "Das Konto des SEMS-Portals / der SEMS+-App. Wird genutzt, wenn der Wechselrichter im Netzwerk nicht erreichbar ist, oder als Ausweichlösung. Nur lesend, alle 5 Minuten aktualisiert. Ein in der SEMS-App angelegtes Besucherkonto genügt.",
+        "es": "La cuenta del portal SEMS / de la app SEMS+. Se usa cuando el inversor no es accesible en la red, o como respaldo. Solo lectura, actualizada cada 5 minutos. Basta con una cuenta de visitante creada en la app SEMS."
+      },
+      "links": [
+        {
+          "url": "https://www.semsportal.com",
+          "label": {
+            "en": "SEMS Portal",
+            "fr": "Portail SEMS",
+            "de": "SEMS-Portal",
+            "es": "Portal SEMS"
+          }
+        }
+      ]
+    },
+    {
+      "key": "sems_account",
+      "type": "string",
+      "label": {
+        "en": "SEMS e-mail address",
+        "fr": "Adresse e-mail SEMS",
+        "de": "SEMS-E-Mail-Adresse",
+        "es": "Correo electrónico SEMS"
+      },
+      "placeholder": {
+        "en": "you@example.com",
+        "fr": "vous@exemple.fr",
+        "de": "sie@beispiel.de",
+        "es": "usted@ejemplo.es"
+      },
+      "required": false
+    },
+    {
+      "key": "sems_password",
+      "type": "secret",
+      "label": {
+        "en": "SEMS password",
+        "fr": "Mot de passe SEMS",
+        "de": "SEMS-Passwort",
+        "es": "Contraseña SEMS"
+      },
+      "required": false
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often the inverters are read, in seconds (one minute minimum, 5 minutes for the cloud).",
+        "fr": "Fréquence de lecture des onduleurs, en secondes (une minute minimum, 5 minutes pour le cloud).",
+        "de": "Wie oft die Wechselrichter gelesen werden, in Sekunden (mindestens eine Minute, 5 Minuten für die Cloud).",
+        "es": "Frecuencia de lectura de los inversores, en segundos (un minuto mínimo, 5 minutos para la nube)."
+      },
+      "required": false,
+      "default": 60,
+      "min": 60,
+      "max": 3600
+    },
+    {
+      "key": "surplus_threshold",
+      "type": "number",
+      "label": {
+        "en": "Surplus threshold (W)",
+        "fr": "Seuil de surplus (W)",
+        "de": "Überschussschwelle (W)",
+        "es": "Umbral de excedente (W)"
+      },
+      "description": {
+        "en": "Power injected into the grid above which the \"Solar surplus started\" scene trigger fires.",
+        "fr": "Puissance injectée sur le réseau au-delà de laquelle le déclencheur « Surplus solaire » se lance.",
+        "de": "Ins Netz eingespeiste Leistung, ab der der Szenen-Auslöser „Solarüberschuss“ auslöst.",
+        "es": "Potencia inyectada a la red a partir de la cual se dispara el activador «Excedente solar»."
+      },
+      "required": false,
+      "default": 500,
+      "min": 0,
+      "max": 100000
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 120
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "production_started",
+      "label": {
+        "en": "Solar production started",
+        "fr": "Production solaire démarrée",
+        "de": "Solarerzeugung gestartet",
+        "es": "Producción solar iniciada"
+      },
+      "description": {
+        "en": "In the morning, the inverter starts producing (more than 50 W).",
+        "fr": "Le matin, l'onduleur commence à produire (plus de 50 W).",
+        "de": "Morgens beginnt der Wechselrichter zu erzeugen (mehr als 50 W).",
+        "es": "Por la mañana, el inversor empieza a producir (más de 50 W)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ],
+      "variables": [
+        {
+          "key": "power",
+          "type": "number",
+          "label": {
+            "en": "Production (W)",
+            "fr": "Production (W)",
+            "de": "Erzeugung (W)",
+            "es": "Producción (W)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "production_stopped",
+      "label": {
+        "en": "Solar production stopped",
+        "fr": "Production solaire arrêtée",
+        "de": "Solarerzeugung beendet",
+        "es": "Producción solar detenida"
+      },
+      "description": {
+        "en": "In the evening, the production falls back to zero.",
+        "fr": "Le soir, la production retombe à zéro.",
+        "de": "Abends fällt die Erzeugung auf null.",
+        "es": "Por la tarde, la producción vuelve a cero."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ],
+      "variables": [
+        {
+          "key": "energy_today",
+          "type": "number",
+          "label": {
+            "en": "Produced today (kWh)",
+            "fr": "Produit aujourd'hui (kWh)",
+            "de": "Heute erzeugt (kWh)",
+            "es": "Producido hoy (kWh)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "surplus_started",
+      "label": {
+        "en": "Solar surplus started",
+        "fr": "Surplus solaire",
+        "de": "Solarüberschuss begonnen",
+        "es": "Excedente solar iniciado"
+      },
+      "description": {
+        "en": "The power injected into the grid exceeds the threshold of the configuration: time to start an appliance.",
+        "fr": "La puissance injectée dépasse le seuil de la configuration : le moment de lancer un appareil.",
+        "de": "Die eingespeiste Leistung übersteigt die Schwelle der Konfiguration: Zeit, ein Gerät zu starten.",
+        "es": "La potencia inyectada supera el umbral de la configuración: momento de encender un aparato."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ],
+      "variables": [
+        {
+          "key": "power",
+          "type": "number",
+          "label": {
+            "en": "Exported power (W)",
+            "fr": "Puissance injectée (W)",
+            "de": "Eingespeiste Leistung (W)",
+            "es": "Potencia exportada (W)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "surplus_stopped",
+      "label": {
+        "en": "Solar surplus ended",
+        "fr": "Fin du surplus solaire",
+        "de": "Solarüberschuss beendet",
+        "es": "Excedente solar terminado"
+      },
+      "description": {
+        "en": "The injected power fell under half the threshold.",
+        "fr": "La puissance injectée est retombée sous la moitié du seuil.",
+        "de": "Die eingespeiste Leistung ist unter die Hälfte der Schwelle gefallen.",
+        "es": "La potencia inyectada bajó de la mitad del umbral."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ],
+      "variables": [
+        {
+          "key": "power",
+          "type": "number",
+          "label": {
+            "en": "Exported power (W)",
+            "fr": "Puissance injectée (W)",
+            "de": "Eingespeiste Leistung (W)",
+            "es": "Potencia exportada (W)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "inverter_fault",
+      "label": {
+        "en": "Inverter fault",
+        "fr": "Défaut de l'onduleur",
+        "de": "Wechselrichterstörung",
+        "es": "Avería del inversor"
+      },
+      "description": {
+        "en": "The inverter reports a new error (local connection).",
+        "fr": "L'onduleur signale une nouvelle erreur (connexion locale).",
+        "de": "Der Wechselrichter meldet einen neuen Fehler (lokale Verbindung).",
+        "es": "El inversor indica un nuevo error (conexión local)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ],
+      "variables": [
+        {
+          "key": "error_code",
+          "type": "number",
+          "label": {
+            "en": "Error code",
+            "fr": "Code d'erreur",
+            "de": "Fehlercode",
+            "es": "Código de error"
+          }
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "label": {
+            "en": "Error description",
+            "fr": "Description de l'erreur",
+            "de": "Fehlerbeschreibung",
+            "es": "Descripción del error"
+          }
+        }
+      ]
+    },
+    {
+      "key": "inverter_unreachable",
+      "label": {
+        "en": "Inverter unreachable",
+        "fr": "Onduleur injoignable",
+        "de": "Wechselrichter nicht erreichbar",
+        "es": "Inversor inaccesible"
+      },
+      "description": {
+        "en": "Neither the network nor the SEMS cloud answers for this inverter anymore.",
+        "fr": "Ni le réseau ni le cloud SEMS ne répondent plus pour cet onduleur.",
+        "de": "Weder das Netzwerk noch die SEMS-Cloud antworten für diesen Wechselrichter.",
+        "es": "Ni la red ni la nube SEMS responden ya para este inversor."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ]
+    },
+    {
+      "key": "inverter_reachable",
+      "label": {
+        "en": "Inverter back online",
+        "fr": "Onduleur de nouveau joignable",
+        "de": "Wechselrichter wieder erreichbar",
+        "es": "Inversor accesible de nuevo"
+      },
+      "description": {
+        "en": "The inverter answers again after being unreachable.",
+        "fr": "L'onduleur répond de nouveau après avoir été injoignable.",
+        "de": "Der Wechselrichter antwortet wieder, nachdem er nicht erreichbar war.",
+        "es": "El inversor vuelve a responder tras estar inaccesible."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "read_inverter",
+      "label": {
+        "en": "Read the GoodWe inverter",
+        "fr": "Lire l'onduleur GoodWe",
+        "de": "GoodWe-Wechselrichter auslesen",
+        "es": "Leer el inversor GoodWe"
+      },
+      "description": {
+        "en": "Read the inverter now and use its values in the next actions.",
+        "fr": "Lit l'onduleur maintenant et utilise ses valeurs dans les actions suivantes.",
+        "de": "Liest den Wechselrichter jetzt und nutzt seine Werte in den folgenden Aktionen.",
+        "es": "Lee el inversor ahora y usa sus valores en las acciones siguientes."
+      },
+      "timeout_seconds": 60,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "reachable",
+          "type": "boolean",
+          "label": { "en": "Reachable", "fr": "Joignable", "de": "Erreichbar", "es": "Accesible" }
+        },
+        {
+          "key": "pv_power",
+          "type": "number",
+          "label": {
+            "en": "Solar production (W)",
+            "fr": "Production solaire (W)",
+            "de": "Solarerzeugung (W)",
+            "es": "Producción solar (W)"
+          }
+        },
+        {
+          "key": "grid_power",
+          "type": "number",
+          "label": {
+            "en": "Grid power, import + / export - (W)",
+            "fr": "Puissance réseau, soutirage + / injection - (W)",
+            "de": "Netzleistung, Bezug + / Einspeisung - (W)",
+            "es": "Potencia de red, importación + / exportación - (W)"
+          }
+        },
+        {
+          "key": "load_power",
+          "type": "number",
+          "label": {
+            "en": "House consumption (W)",
+            "fr": "Consommation de la maison (W)",
+            "de": "Hausverbrauch (W)",
+            "es": "Consumo de la casa (W)"
+          }
+        },
+        {
+          "key": "battery_soc",
+          "type": "number",
+          "label": {
+            "en": "Battery level (%)",
+            "fr": "Niveau de batterie (%)",
+            "de": "Batteriestand (%)",
+            "es": "Nivel de batería (%)"
+          }
+        },
+        {
+          "key": "pv_energy_today",
+          "type": "number",
+          "label": {
+            "en": "Produced today (kWh)",
+            "fr": "Produit aujourd'hui (kWh)",
+            "de": "Heute erzeugt (kWh)",
+            "es": "Producido hoy (kWh)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_operation_mode",
+      "label": {
+        "en": "Set the GoodWe operation mode",
+        "fr": "Changer le mode de fonctionnement GoodWe",
+        "de": "GoodWe-Betriebsmodus einstellen",
+        "es": "Cambiar el modo de funcionamiento GoodWe"
+      },
+      "description": {
+        "en": "ET/EH/BT/BH hybrids, local connection.",
+        "fr": "Hybrides ET/EH/BT/BH, connexion locale.",
+        "de": "Hybride ET/EH/BT/BH, lokale Verbindung.",
+        "es": "Híbridos ET/EH/BT/BH, conexión local."
+      },
+      "timeout_seconds": 60,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" },
+          "required": true
+        },
+        {
+          "key": "mode",
+          "type": "select",
+          "label": { "en": "Mode", "fr": "Mode", "de": "Modus", "es": "Modo" },
+          "required": true,
+          "default": "general",
+          "options": [
+            {
+              "value": "general",
+              "label": {
+                "en": "General (self-consumption)",
+                "fr": "Général (autoconsommation)",
+                "de": "Allgemein (Eigenverbrauch)",
+                "es": "General (autoconsumo)"
+              }
+            },
+            {
+              "value": "backup",
+              "label": {
+                "en": "Backup (keep the battery full)",
+                "fr": "Secours (batterie gardée pleine)",
+                "de": "Backup (Batterie voll halten)",
+                "es": "Respaldo (batería llena)"
+              }
+            },
+            {
+              "value": "eco",
+              "label": {
+                "en": "Eco (schedules of the GoodWe app)",
+                "fr": "Éco (plages de l'application GoodWe)",
+                "de": "Eco (Zeitpläne der GoodWe-App)",
+                "es": "Eco (horarios de la app GoodWe)"
+              }
+            },
+            {
+              "value": "peak_shaving",
+              "label": {
+                "en": "Peak shaving",
+                "fr": "Écrêtement des pointes",
+                "de": "Spitzenkappung",
+                "es": "Recorte de picos"
+              }
+            },
+            {
+              "value": "self_use",
+              "label": {
+                "en": "Self-use (recent firmwares)",
+                "fr": "Autoconsommation (firmwares récents)",
+                "de": "Eigennutzung (neuere Firmware)",
+                "es": "Autoconsumo (firmwares recientes)"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "applied",
+          "type": "boolean",
+          "label": { "en": "Applied", "fr": "Appliqué", "de": "Angewendet", "es": "Aplicado" }
+        }
+      ]
+    },
+    {
+      "key": "set_export_limit",
+      "label": {
+        "en": "Limit the GoodWe grid export",
+        "fr": "Limiter l'injection GoodWe",
+        "de": "GoodWe-Einspeisung begrenzen",
+        "es": "Limitar la exportación GoodWe"
+      },
+      "description": {
+        "en": "Cap the power injected into the grid (local connection). 0 W = no export.",
+        "fr": "Plafonne la puissance injectée sur le réseau (connexion locale). 0 W = pas d'injection.",
+        "de": "Begrenzt die ins Netz eingespeiste Leistung (lokale Verbindung). 0 W = keine Einspeisung.",
+        "es": "Limita la potencia inyectada a la red (conexión local). 0 W = sin exportación."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" },
+          "required": true
+        },
+        {
+          "key": "limit",
+          "type": "number",
+          "label": {
+            "en": "Export limit (W)",
+            "fr": "Limite d'injection (W)",
+            "de": "Einspeisegrenze (W)",
+            "es": "Límite de exportación (W)"
+          },
+          "required": true,
+          "min": 0,
+          "max": 65535
+        }
+      ],
+      "outputs": [
+        {
+          "key": "applied",
+          "type": "boolean",
+          "label": { "en": "Applied", "fr": "Appliqué", "de": "Angewendet", "es": "Aplicado" }
+        }
+      ]
+    },
+    {
+      "key": "set_battery_dod",
+      "label": {
+        "en": "Set the GoodWe battery depth of discharge",
+        "fr": "Régler la profondeur de décharge GoodWe",
+        "de": "GoodWe-Entladetiefe einstellen",
+        "es": "Ajustar la profundidad de descarga GoodWe"
+      },
+      "description": {
+        "en": "How much of the battery may be used on-grid, e.g. 20 % to keep a reserve for a power cut (local connection).",
+        "fr": "Part de la batterie utilisable sur réseau, ex. 20 % pour garder une réserve en cas de coupure (connexion locale).",
+        "de": "Nutzbarer Anteil der Batterie im Netzbetrieb, z. B. 20 % für eine Reserve bei Stromausfall (lokale Verbindung).",
+        "es": "Parte de la batería utilizable en red, p. ej. 20 % para guardar reserva ante un corte (conexión local)."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" },
+          "required": true
+        },
+        {
+          "key": "dod",
+          "type": "number",
+          "label": {
+            "en": "Depth of discharge (%)",
+            "fr": "Profondeur de décharge (%)",
+            "de": "Entladetiefe (%)",
+            "es": "Profundidad de descarga (%)"
+          },
+          "required": true,
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "outputs": [
+        {
+          "key": "applied",
+          "type": "boolean",
+          "label": { "en": "Applied", "fr": "Appliqué", "de": "Angewendet", "es": "Aplicado" }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "goodwe_overview",
+      "label": {
+        "en": "GoodWe inverter",
+        "fr": "Onduleur GoodWe",
+        "de": "GoodWe-Wechselrichter",
+        "es": "Inversor GoodWe"
+      },
+      "description": {
+        "en": "Live solar production, house consumption, grid exchange and battery, with the inverter state.",
+        "fr": "Production solaire, consommation, échange réseau et batterie en direct, avec l'état de l'onduleur.",
+        "de": "Solarerzeugung, Hausverbrauch, Netzaustausch und Batterie live, mit dem Wechselrichterzustand.",
+        "es": "Producción solar, consumo, intercambio con la red y batería en directo, con el estado del inversor."
+      },
+      "icon": "sun",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" },
+          "required": true
+        }
+      ],
+      "action_timeout_seconds": 60
+    },
+    {
+      "key": "goodwe_production",
+      "label": {
+        "en": "GoodWe production",
+        "fr": "Production GoodWe",
+        "de": "GoodWe-Erzeugung",
+        "es": "Producción GoodWe"
+      },
+      "description": {
+        "en": "Production and consumption chart, and the energy balance of the day.",
+        "fr": "Courbe de production et de consommation, et bilan énergétique du jour.",
+        "de": "Erzeugungs- und Verbrauchskurve und die Energiebilanz des Tages.",
+        "es": "Gráfico de producción y consumo, y balance energético del día."
+      },
+      "icon": "bar-chart-2",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Inverter", "fr": "Onduleur", "de": "Wechselrichter", "es": "Inversor" },
+          "required": true
+        },
+        {
+          "key": "period",
+          "type": "select",
+          "label": { "en": "Period", "fr": "Période", "de": "Zeitraum", "es": "Periodo" },
+          "default": "last-day",
+          "options": [
+            {
+              "value": "last-day",
+              "label": { "en": "24 hours", "fr": "24 heures", "de": "24 Stunden", "es": "24 horas" }
+            },
+            {
+              "value": "last-three-days",
+              "label": { "en": "3 days", "fr": "3 jours", "de": "3 Tage", "es": "3 días" }
+            },
+            {
+              "value": "last-week",
+              "label": { "en": "Week", "fr": "Semaine", "de": "Woche", "es": "Semana" }
+            },
+            {
+              "value": "last-month",
+              "label": { "en": "Month", "fr": "Mois", "de": "Monat", "es": "Mes" }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

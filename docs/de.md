@@ -1,0 +1,84 @@
+# GoodWe-Integration
+
+Verfolgen Sie Ihre GoodWe-Solaranlage in Gladys: Solarerzeugung, Hausverbrauch,
+Netzbezug/-einspeisung und Batterie, live, mit Szenen und Dashboard-Widgets.
+
+## Unterstützte Wechselrichter
+
+| Familie                 | Modelle                                    | Lokal (LAN)        | SEMS-Cloud |
+| ----------------------- | ------------------------------------------ | ------------------ | ---------- |
+| ET (Hybrid, Batterie)   | ET, EH, BT, BH, ET Plus, EHA/ESA G20, GEH… | ✅ + Einstellungen | ✅         |
+| ES (Hybrid, Batterie)   | ES, EM, BP, SBP                            | ✅ + Einstellungen | ✅         |
+| DT (Netzwechselrichter) | DT, SDT, MT, MS, D-NS, XS, GEP…            | ✅                 | ✅         |
+
+Der Wechselrichter benötigt sein GoodWe-WLAN- oder LAN-Modul (Wi-Fi Kit,
+WiFi/LAN Kit, Ezlink…), verbunden mit Ihrem Heimnetz.
+
+## Zwei Wege zum Wechselrichter
+
+**Lokal (empfohlen).** Gladys spricht direkt mit dem Wechselrichter in Ihrem
+Netzwerk (UDP-Port 8899): Werte jede Minute, Tagesenergie, Zählerstände,
+Temperatur und Einstellungen in Szenen. Kein Konto, kein Internet nötig.
+
+**SEMS-Cloud (optional).** Das Konto des SEMS-Portals / der SEMS+-App.
+Funktioniert, wenn Gladys nicht im selben Netzwerk wie der Wechselrichter ist,
+und dient als Ausweichlösung, wenn die lokale Verbindung ausfällt. Nur lesend,
+alle 5 Minuten aktualisiert (das Portal drosselt häufigere Anfragen).
+
+Mit beiden ist jeder Wechselrichter **ein** Gerät: lokal gelesen, wechselt er
+bei Verlust der lokalen Verbindung zur Cloud (ein orangefarbener Punkt am
+„Cloud“-Badge zeigt es) und zurück. Die Standardoption **Lokale Verbindung
+bevorzugen** wählt den zuerst versuchten Kanal.
+
+## Konfiguration
+
+1. Installieren Sie die Integration über **Integrationen → GoodWe**.
+2. Lokale Verbindung:
+   - lassen Sie **Netzwerk nach GoodWe-Wechselrichtern durchsuchen** aktiv;
+   - wird der Wechselrichter nicht gefunden (anderes Subnetz, VLAN, Router
+     blockiert Broadcasts), geben Sie seine **IP-Adresse** ein und vergeben Sie
+     sie fest im Router (DHCP-Reservierung).
+3. Cloud (optional): **E-Mail-Adresse** und **Passwort** Ihres SEMS-Kontos.
+   Tipp: Legen Sie in der SEMS-App ein eigenes _Besucherkonto_ an.
+4. Klicken Sie auf **Verbindung testen**: Jeder gefundene Wechselrichter wird
+   mit Modell und Seriennummer angezeigt.
+5. Öffnen Sie den Tab **Erkennung** und fügen Sie Ihre Wechselrichter hinzu.
+
+## Gerätefunktionen
+
+Solarerzeugung (W), Tages-/Gesamterzeugung (kWh), Netzleistung (W, Bezug > 0,
+Einspeisung < 0, Zähler nötig), Bezugs-/Einspeisezählerstand (kWh),
+Hausverbrauch (W), Batteriestand (%), Lade-/Entladeleistung (W), geladene /
+entladene Energie (kWh), Wechselrichtertemperatur (°C), Netzspannung (V) — je
+nach Modell und Verbindung.
+
+## Szenen
+
+Auslöser: **Solarerzeugung gestartet / beendet**, **Solarüberschuss begonnen /
+beendet** (eingespeiste Leistung über der Schwelle der Konfiguration, 500 W
+standardmäßig), **Wechselrichterstörung**, **Wechselrichter nicht erreichbar /
+wieder erreichbar**.
+
+Aktionen: **GoodWe-Wechselrichter auslesen** (frische Werte für die folgenden
+Aktionen), **GoodWe-Betriebsmodus einstellen** (ET-Familie),
+**GoodWe-Einspeisung begrenzen** (W), **GoodWe-Entladetiefe einstellen** (%).
+Einstellungen erfordern die lokale Verbindung; kann der Wechselrichter eine
+Aktion nicht ausführen, liefert sie **Angewendet = nein**.
+
+## Dashboard-Widgets
+
+- **GoodWe-Wechselrichter**: Live-Kacheln Solar, Haus, Netz, Batterie, Zustand,
+  Verbindung und Aktualisieren-Schaltfläche;
+- **GoodWe-Erzeugung**: Erzeugungs- und Verbrauchskurve (24 h bis ein Monat)
+  und Energiebilanz des Tages.
+
+## Fehlerbehebung
+
+- **Kein Wechselrichter gefunden**: IP-Adresse eingeben und UDP-Port 8899
+  zwischen Gladys und Wechselrichter erlauben. Manche neue Module sprechen nur
+  mit der Cloud: dann das SEMS-Konto nutzen.
+- **Cloud: „Anmeldung abgelehnt“**: E-Mail und Passwort auf semsportal.com
+  prüfen. Nach einer Drosselung wartet die Integration selbst 5 Minuten.
+
+GoodWe ist eine Marke der GoodWe Technologies Co., Ltd. Diese
+Community-Integration ist nicht mit GoodWe verbunden.
