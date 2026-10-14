@@ -8,8 +8,8 @@
     "de": "GoodWe-Solarwechselrichter und Batterien: Erzeugung, Netz, Haus, Batterie, lokal oder SEMS-Cloud.",
     "es": "Inversores solares y baterías GoodWe: producción, red, casa y batería, en local o nube SEMS."
   },
-  "version": "0.0.0",
-  "docker_image": "ghcr.io/gboulvin/gladys-goodwe-solar:0.0.0",
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-goodwe-solar:1.0.0",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-GoodWe-Solar/main/cover.png",
   "categories": ["energy"],
