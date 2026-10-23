@@ -1,6 +1,6 @@
 {
   "name": "gladys-integration-goodwe",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "GoodWe solar inverters and batteries for Gladys Assistant: local (UDP) and SEMS cloud.",
   "type": "module",
